@@ -49,14 +49,16 @@ class training_node:#used when train a model.difference to regular node is that 
         self.__input = input
         self.__output = randint(1,2^8)
         self.lr = LinearRegression()
+        self.lr.fit(self.__input,self.__output)
     
     def get_state(self):
         return self.lr.coef_[0],self.lr.intercept_
     
     def output(self):
         return relu(self.lr.predict(self.__input))
-    
-    def train(self):
+
+    def train(self,input):
+        self.__input = input
         self.lr.fit(self.__input,self.__output)
 
     def change(self,value):
@@ -113,7 +115,6 @@ class text_model:
             layer = []
             for n in range(self.__dim[0]):
                 node = training_node(data[n])
-                node.train()
                 data_forward += node.output()
                 layer.append(node)
             training_layers.append(layer)
@@ -124,7 +125,6 @@ class text_model:
                 data_forward_next = 0
                 for n in range(self.__dim[layer_num]):
                     node = training_node(data_forward)#forward data to the input
-                    node.train()
                     data_forward_next += node.output()
                     layer.append(node)
                 training_layers.append(layer)
@@ -134,7 +134,6 @@ class text_model:
             #output layer and forward pass
             for n in range(self.__dim[-1]):
                 node = training_node(data_forward)#forward data to the input
-                node.train()
                 data_layer.append(node.output())
                 layer.append(node)
             training_layers.append(layer)
@@ -144,41 +143,73 @@ class text_model:
             for n in range(len(self.__dim[-1])):
                 avg_loss += output[n] - data_layer[n]
             avg_loss = avg_loss / len(self.__dim[-1])
+            avg_loss_next = 0
 
             #forward pass training
             data_forward_training = 0
             cache = 0#stores the sum of previous layer
             direction = 1#if positive node is increased and visa versa
-            for layer_num in range(1,len(self.__dim)):
-                for node_num in range(len(self.__dim[layer_num])):
+            for node_num in range(len(self.__dim[0])):
+                while True:
                     change_amount = avg_loss * self.__learning_rate * direction
-                    node = training_layers[layer_num][node_num]
+                    node = training_layers[0][node_num]
                     node.change(change_amount)
                     #calc change
                     for n in range(len(self.__dim[0])):
-                        training_layers[0][n].train()
-                        cache += training_layers[0][n].output()
+                        training_layers[0][n].train(data[n])
+                        data_forward_training += training_layers[0][n].output()
                     for l in range(layer_num,len(self.__dim)-1):
                         data_forward_next = 0
                         for n in range(len(self.__dim[l])):
-                            training_layers[l][n].train()
+                            training_layers[l][n].train(data_forward_training)
                             data_forward_next += training_layers[l][n].output()
                         data_forward_training = data_forward_next
-                    data_layer_training = []
+                    data_forward_next = 0
+                    data_layer = []
                     for n in range(len(self.__dim[-1])):
-                        training_layers[-1][n].train()
-                        data_layer_training.append(training_layers[-1][n].output())
-                    avg_loss_next = 0
-                    for n in range(len(self.__dim[-1])):
-                        avg_loss_training += output[n] - data_layer_training[n]
+                        training_layers[-1][n].train(data_forward_training)
+                        data_layer.append(training_layers[l][n].output())
+                        data_forward_next += training_layers[-1][n].output()
+                    for n in range(len(self.__dim[-1])):#calc new loss
+                            loss += output[n] - data_layer[n]
+                            if loss < 0:loss*-1#convert to positive value
+                            avg_loss_next += loss
                     avg_loss_next = avg_loss_next / len(self.__dim[-1])
-                    if avg_loss > avg_loss_next:
-                        direction = 1
-                    else:direction = -1
+                    if 0 <= avg_loss-avg_loss_next <= 0.1: break#stop training when gradient is small
+                    elif avg_loss > avg_loss_next:direction = 1
+                    else: direction = -1
+                    avg_loss = avg_loss_next
+                    avg_loss_next = 0
+            cache = data_forward_next
+            for layer_num in range(1,len(self.__dim)):
+                for node_num in range(len(self.__dim[layer_num])):
+                    while True:
+                        change_amount = avg_loss * self.__learning_rate * direction
+                        node = training_layers[layer_num][node_num]
+                        node.change(change_amount)
+                        #calc change
+                        for l in range(layer_num,len(self.__dim)-1):
+                            data_forward_next = 0
+                            for n in range(len(self.__dim[l])):
+                                training_layers[l][n].train(cache)
+                                data_forward_next += training_layers[l][n].output()
+                        data_layer = []
+                        for n in range(len(self.__dim[-1])):
+                            training_layers[-1][n].train(data_forward_training)
+                            data_layer.append(training_layers[l][n].output())
+                            data_forward_next += training_layers[-1][n].output()
+                        for n in range(len(self.__dim[-1])):#calc new loss
+                            loss += output[n] - data_layer[n]
+                            if loss < 0:loss*-1#convert to positive value
+                            avg_loss_next += loss
+                        avg_loss_next = avg_loss_next / len(self.__dim[-1])
+                        if 0 <= avg_loss-avg_loss_next <= 0.1: break#stop training when gradient is small
+                        elif avg_loss > avg_loss_next:direction = 1
+                        else: direction = -1
+                        avg_loss = avg_loss_next
+                        avg_loss_next = 0
+                cache = data_forward_next
                         
-
-
-
     def store_model():
         with open('custom_nn.py','w') as model:
             #store model as an python script that is executed via terminal.
