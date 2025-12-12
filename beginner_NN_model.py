@@ -8,17 +8,37 @@ import pandas as pd
 from nltk.tokenize import word_tokenize,sent_tokenize
 from random import randint
 
-df = pd.read_csv('nlp_code_dataset.csv')
-tokens = {'':0,}
-sen = sent_tokenize(df['Text'])
-for line in sen:
-    words = word_tokenize(line)
-    for word in words:
-        word = word.lower()
-        if word == ',' or word == '.' or word == '!' or word == '?':
-            continue
-        if word not in tokens:
-            tokens[word] = len(tokens+1)#offset by one since 0 will represent null word
+df = pd.read_csv('ML\dataset.csv',sep=';',engine='python',dtype=str)
+df['Text'] = df['Text'].astype(str)
+df['Code'] = df['Code'].astype(str)
+def tokenize(token_dict,dataframe):
+    if isinstance(token_dict,dict) == False:raise TypeError('First arg is not type dict')
+    elif isinstance(dataframe,pd.DataFrame) == False: TypeError('second arg is not type dataframe')
+    elif 'Text' not in dataframe.columns: raise NameError('column Text was not found')
+    elif len(token_dict) == 0:
+        token_dict = {'':0,'(':1,')':2,'    ':3,':':4,'[':5,']':6}
+    for t in df['Text']:
+        sen = sent_tokenize(t)
+        for line in sen:
+            words = word_tokenize(line)
+            for word in words:
+                word = word.lower()
+                if word == ',' or word == '.' or word == '!' or word == '?':
+                    continue
+                if word not in token_dict:
+                    token_dict[word] = len(token_dict)
+    for t in df['Code']:
+        sen = sent_tokenize(t)
+        for line in sen:
+            words = word_tokenize(line)
+            for word in words:
+                word = word.lower()
+                if word == ',' or word == '.' or word == '!' or word == '?':
+                    continue
+                if word not in token_dict:
+                    token_dict[word] = len(token_dict)
+    return token_dict
+
 
 class node:
     def __init__(self):
@@ -67,22 +87,22 @@ class training_node:#used when train a model.difference to regular node is that 
 
 class text_model:
     def __init__(self,dimension,token,learning_rate):
-        self.__learning_rate = int(learning_rate)
+        self.__learning_rate = float(learning_rate)
         self.__dim = tuple(dimension)#defines the archetexture of the model
         self.__layers = [None]#stores the layers that contain nodes
         self.__token = token#used to encode text
-        self.__token_reverse = ['']#used to encode text
-        for text,token_num in self.__token:#index represent the token
-            self.__token_reverse.append(text)
+        self.__token_reverse = ['']#used to decode text
+        for key, value in self.__token.items():#index represent the token
+            self.__token_reverse.append(key)
         #initalize model
         for num in self.__dim:
-            layer = (node()) * num
+            layer = [node()] * num
             self.__layers.append(layer)
         self.__layers = tuple(self.__layers)
 
     def encode(self,input):#converts text to int
         encoded_text = []
-        for word in range(input):
+        for word in input:
             word = word.lower()
             word = word.strip(",.?!:-_")
             encoded_text.append(self.__token[word])
@@ -93,7 +113,7 @@ class text_model:
     
     def train(self,input,output):
         if isinstance(input,str) == False:raise TypeError("Input is not type: str")
-        elif len(input) > self.__dim[0]: raise ValueError("input is too larger")
+        elif len(input) > self.__dim[0]: raise ValueError(f"input is too large\ninput size:{len(input)}\ninput layer size:{self.__dim[0]}")
         elif isinstance(output,str) == False:raise TypeError("output is not type: str")
         else:
             #encode input
@@ -104,9 +124,9 @@ class text_model:
 
             #pad input so that it is same size as input layer
             if len(input) < self.__dim[0]:
-                padding = ((0)*(self.__dim[0] - len(input)))
-            data = self.encode(input)
-            data.extend(padding)
+                padding = [0]*(self.__dim[0] - len(input))
+            elif len(input) > self.__dim[0]:raise Warning('input size is larger than context window')
+            input.extend(padding)
             data_forward = 0#sum of all wieghts
             data_layer = []#stores the the individual data of the prev layer
             training_layers = []
@@ -114,7 +134,7 @@ class text_model:
             #initiat with first layer
             layer = []
             for n in range(self.__dim[0]):
-                node = training_node(data[n])
+                node = training_node(input[n])
                 data_forward += node.output()
                 layer.append(node)
             training_layers.append(layer)
@@ -143,33 +163,39 @@ class text_model:
             for n in range(len(self.__dim[-1])):
                 avg_loss += output[n] - data_layer[n]
             avg_loss = avg_loss / len(self.__dim[-1])
+            loss_list = [avg_loss]
             avg_loss_next = 0
 
             #forward pass training
+            data_forward = 0
             data_forward_training = 0
-            cache = 0#stores the sum of previous layer
             direction = 1#if positive node is increased and visa versa
+            loss = 0
+
+            #input layer
             for node_num in range(len(self.__dim[0])):
-                while True:
+                for _ in range(10):
                     change_amount = avg_loss * self.__learning_rate * direction
                     node = training_layers[0][node_num]
                     node.change(change_amount)
-                    #calc change
+
+                    #forward pass input after change
                     for n in range(len(self.__dim[0])):
-                        training_layers[0][n].train(data[n])
+                        training_layers[0][n].train(input[n])
                         data_forward_training += training_layers[0][n].output()
                     for l in range(layer_num,len(self.__dim)-1):
-                        data_forward_next = 0
+                        data_forward_training_next = 0
                         for n in range(len(self.__dim[l])):
                             training_layers[l][n].train(data_forward_training)
-                            data_forward_next += training_layers[l][n].output()
-                        data_forward_training = data_forward_next
-                    data_forward_next = 0
+                            data_forward_training_next += training_layers[l][n].output()
+                        data_forward_training = data_forward_training_next
+                    data_forward_training_next = 0
                     data_layer = []
                     for n in range(len(self.__dim[-1])):
                         training_layers[-1][n].train(data_forward_training)
                         data_layer.append(training_layers[l][n].output())
-                        data_forward_next += training_layers[-1][n].output()
+                        data_forward_training_next += training_layers[-1][n].output()
+
                     for n in range(len(self.__dim[-1])):#calc new loss
                             loss += output[n] - data_layer[n]
                             if loss < 0:loss*-1#convert to positive value
@@ -180,24 +206,29 @@ class text_model:
                     else: direction = -1
                     avg_loss = avg_loss_next
                     avg_loss_next = 0
-            cache = data_forward_next
+                avg_loss = avg_loss_next
+                loss_list.append(avg_loss)
+                avg_loss_next = 0
+                
+                data_forward += node.output()
+            #hidden layer and output
             for layer_num in range(1,len(self.__dim)):
                 for node_num in range(len(self.__dim[layer_num])):
-                    while True:
+                    for _ in range(10):
                         change_amount = avg_loss * self.__learning_rate * direction
                         node = training_layers[layer_num][node_num]
                         node.change(change_amount)
                         #calc change
                         for l in range(layer_num,len(self.__dim)-1):
-                            data_forward_next = 0
+                            data_forward_training_next = 0
                             for n in range(len(self.__dim[l])):
-                                training_layers[l][n].train(cache)
-                                data_forward_next += training_layers[l][n].output()
+                                training_layers[l][n].train(data_forward_training)
+                                data_forward_training_next += training_layers[l][n].output()
                         data_layer = []
                         for n in range(len(self.__dim[-1])):
                             training_layers[-1][n].train(data_forward_training)
                             data_layer.append(training_layers[l][n].output())
-                            data_forward_next += training_layers[-1][n].output()
+                            data_forward_training_next += training_layers[-1][n].output()
                         for n in range(len(self.__dim[-1])):#calc new loss
                             loss += output[n] - data_layer[n]
                             if loss < 0:loss*-1#convert to positive value
@@ -208,9 +239,12 @@ class text_model:
                         else: direction = -1
                         avg_loss = avg_loss_next
                         avg_loss_next = 0
-                cache = data_forward_next
-                        
-    def store_model():
+                    avg_loss = avg_loss_next
+                    loss_list.append(avg_loss)
+                    avg_loss_next = 0
+                    data_forward_next += node.output()
+                data_forward = data_forward_next
+                
         with open('custom_nn.py','w') as model:
             #store model as an python script that is executed via terminal.
             #the script take a string arg as an input
@@ -224,3 +258,9 @@ def relu(input):
     if input <= 0:
         return 0
     else: return input
+
+token_words = {}
+token_words = tokenize(token_words,df)
+model = text_model((50,10,10,50),token_words,0.1)
+for text, code in df[['Text', 'Code']].values:
+    model.train(str(text), str(code))
