@@ -1,13 +1,14 @@
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import MLPClassifier
+from sklearn.neural_network import MLPClassifier, MLPRegressor
+from nltk.tokenize import word_tokenize,sent_tokenize
+from random import randint
+from textblob import Word
+from math import log2
 #from sklearn.metrics import 
 import matplotlib.pyplot as mpl
 import numpy as np
 import pandas as pd
-from nltk.tokenize import word_tokenize,sent_tokenize
-from random import randint
-from textblob import Word
 import array
 
 df = pd.read_csv('ML\dataset.csv',sep=';',engine='python',dtype=str)
@@ -71,8 +72,8 @@ class text_model:
         self.__layers = []#stores the layers that contain nodes
         self.__token = token#used to encode text
         self.__token_reverse = tuple(self.__token.keys())#used to decode text
-        self.__inputs = []#stores the tokenizes inputs
-        self.__outputs = []#stores the tokenizes outputs
+        self.__training_inputs = []#stores the tokenizes inputs
+        self.__training_outputs = []#stores the tokenizes outputs
         self.__loss_list = []
         self.__avg_loss = None
         #initalize model
@@ -115,7 +116,7 @@ class text_model:
                 output += f"{self.__token_reverse[-1]} "
         return str(output)
 
-    def add_data(self,input,output):
+    def add_training_data(self,input,output):
         if isinstance(input,str) == False:raise TypeError("Input is not type: str")
         elif len(input) > self.__dim[0]: raise ValueError(f"input is too large\ninput size:{len(input)}\ninput layer size:{self.__dim[0]}")
         elif isinstance(output,str) == False:raise TypeError("output is not type: str")
@@ -136,8 +137,8 @@ class text_model:
             elif len(output) > self.__dim[0]:raise Warning('input size is larger than context window')
             output.extend(padding)
 
-            self.__inputs.append(tuple(input))
-            self.__outputs.append(tuple(output))
+            self.__training_inputs.append(tuple(input))
+            self.__training_inputs.append(tuple(output))
 
     def train(self):
         #calc loss
@@ -146,73 +147,35 @@ class text_model:
         #change wieghts and bias
         direction_wieght = 1
         direction_bias = 1
-        improvement_after_wieght = 0#the change in loss, positive value = decrease in loss
-        improvement_after_bias = 0#the change in loss, positive value = decrease in loss
+        improvement_after_weight_change = 0#the change in loss, positive value = decrease in loss
+        improvement_after_bias_change = 0#the change in loss, positive value = decrease in loss
         for layer in self.__layers:
             for node in layer:
                 for _ in range(self.__epoch):
                     #calc value to change by
-                    change_amount_wieght = self.__learning_rate * self.__avg_loss * direction_wieght
-                    change_amount_bias = self.__learning_rate * self.__avg_loss * direction_bias
+                    change_amount_wieght = self.__learning_rate * improvement_after_weight_change * direction_wieght
+                    change_amount_bias = self.__learning_rate * improvement_after_bias_change * direction_bias
 
                     #change node wieght or bias
                     #wieght
                     node.change_wieght(change_amount_wieght)
                     #calc new loss after wieght change, forward pass
-                    improvement_after_wieght = self.forward_pass_all_data()
-                    if improvement_after_wieght < 0: 
+                    improvement_after_weight_change = self.forward_pass_all_data()
+                    if improvement_after_weight_change < 0: 
                         node.change_wieght(-change_amount_wieght)#revert change
                         direction_wieght *= -1#flip direction
 
                     #bias
                     node.change_bias(change_amount_bias)
                     #calc new loss after bias change, forward pass
-                    improvement_after_bias = self.forward_pass_all_data()
-                    if improvement_after_bias < 0: 
+                    improvement_after_bias_change = self.forward_pass_all_data()
+                    if improvement_after_bias_change < 0: 
                         node.change_bias(-change_amount_bias)#revert change
                         direction_bias *= -1#flip direction
 
-                    if (improvement_after_wieght + improvement_after_bias)/2 < 0.001: break
+                    if (improvement_after_weight_change + improvement_after_bias_change)/2 < 0.001: break
             print(self.__avg_loss)
 
-    def prod_save(self,path):         
-        with open('custom_nn.py','w') as model:
-            #store model as an python script that is executed via terminal.
-            #the script take a string arg as an input
-            #encode the string input arg
-            #store the wieghts and biases
-            #decode output to string
-            #all output values of nodes must pass through relu
-            #only save minimal feature for lowest resource requirements
-            with open(f'{path}','w') as new_model:
-                new_model.write("import numpy as np")
-                new_model.write("parameters_wieghts = np.array(")
-                new_model.write("from sys import argv")
-                wieght_array = []
-                for layer in self.__layers:
-                    temp_array = []
-                    for node in layer:
-                        temp_array.append(node.get_state[0])
-                    wieght_array.append(temp_array)
-                new_model.write(f"{wieght_array}")
-                new_model.write(",int32)")
-                new_model.write("parameters_bias = np.array(")
-                bias_array = []
-                for layer in self.__layers:
-                    temp_array = []
-                    for node in layer:
-                        temp_array.append(node.get_state[1])
-                    bias_array.append(temp_array)
-                new_model.write(f"{bias_array}")
-                new_model.write(",int32)")
-                new_model.write(')')
-                new_model.write("if __name__ == '__Main__'")
-                new_model.write("if isinstance(argv[1],str) == False: raise Warning('')")
-
-    def dev_save(self,path): 
-        #save all features for later
-        #for example self.__inputs and self.__outputs so that it does not have to retrain
-        pass
     def forward_pass_all_data(self):
         data_forward = 0
         data_forward_next = 0
@@ -220,10 +183,10 @@ class text_model:
         new_loss_list = []
         new_avg_loss = 0
 
-        for nth_data in range(len(self.__inputs)):
+        for nth_data in range(len(self.__training_inputs)):
             for n_input in range(len(self.__layers[0])):#pass input into input layer
                 node = self.__layers[0][n_input]
-                input_data = self.__inputs[nth_data][n_input]
+                input_data = self.__training_inputs[nth_data][n_input]
                 data_forward_next += node.output(input_data) 
             data_forward = data_forward_next
             data_forward_next = 0
@@ -236,7 +199,7 @@ class text_model:
 
             for n_output in range(len(self.__layers[-1])):#output layer
                 node = self.__layers[-1][n_output]
-                loss += node.output(data_forward) - self.__outputs[nth_data][n_output]
+                loss += node.output(data_forward) - self.__training_outputs[nth_data][n_output]
 
             #calc loss for an individual input
             data_forward = data_forward_next
@@ -296,16 +259,196 @@ class text_model:
             for node in layer:
                 string.append(str(node))
         return str(string)
+    
+    def load_as_array(self):
+        model_weight_in_array_format = []
+        model_bias_in_array_format = []
+        model_layer_weights = []
+        model_layer_bias = []
+        for layer in self.__layers:
+            for node in layer:
+                state = node.get_state()
+                model_layer_weights.append(state[0])
+                model_layer_bias.append(state[1])
+            model_weight_in_array_format.append(model_layer_weights)
+            model_bias_in_array_format.append(model_layer_bias)
+        model_weight_in_array_format = np.array(model_bias_in_array_format)
+        model_bias_in_array_format = np.array(model_bias_in_array_format)
+        if model_weight_in_array_format.ndim() != 2:
+            raise TypeError('Failed to convert model weights to a 2D numpy array')
+        elif model_bias_in_array_format.ndim() != 2:
+            raise TypeError('Failed to convert model biases to a 2D numpy array')
+        return model_weight_in_array_format,model_bias_in_array_format
+
+class identify_model:
+    def __init__(self, input_size, first_training_input, first_training_output):
+        self.__input_size = int(input_size)
+        self.__mlp_classifier = None
+        self.__knn = None
         
+        # --- Handle first_training_input: must be 2D (n_samples, input_size) ---
+        if not isinstance(first_training_input, np.ndarray):
+            if not isinstance(first_training_input, (list, tuple)):
+                raise TypeError('first_training_input must be a numpy array, list of lists, or tuple of tuples')
+            # Convert list of lists / tuple of tuples to numpy array
+            input_arr = np.array(first_training_input, dtype=int)
+        else:
+            input_arr = first_training_input
+            if not np.issubdtype(input_arr.dtype, np.integer):
+                input_arr = input_arr.astype(int)
+        
+        # Must be exactly 2D
+        if input_arr.ndim != 2:
+            raise ValueError('first_training_input must be 2D (n_samples rows x input_size columns)')
+        
+        # Check number of features matches input_size
+        if input_arr.shape[1] != self.__input_size:
+            raise ValueError(
+                f'Each input sample must have exactly {self.__input_size} features, '
+                f'but got {input_arr.shape[1]}'
+            )
+        
+        n_samples = input_arr.shape[0]
+        if n_samples == 0:
+            raise ValueError('first_training_input must contain at least one sample')
+        
+        self.__training_inputs = input_arr  # Shape: (n_samples, input_size), dtype: int
+        
+        # --- Handle first_training_output: must have n_samples integer scalars ---
+        if not isinstance(first_training_output, np.ndarray):
+            if not isinstance(first_training_output, (list, tuple)):
+                raise TypeError('first_training_output must be a list, tuple, or numpy array of integers')
+            output_arr = np.array(first_training_output, dtype=int)
+        else:
+            output_arr = first_training_output
+            if not np.issubdtype(output_arr.dtype, np.integer):
+                output_arr = output_arr.astype(int)
+        
+        # Allow 1D or 2D (e.g., column vector), but not higher
+        if output_arr.ndim == 1:
+            pass  # Good: shape (n_samples,)
+        elif output_arr.ndim == 2:
+            if output_arr.shape[1] != 1:
+                raise ValueError('If first_training_output is 2D, it must be a column vector (n_samples, 1)')
+            output_arr = output_arr.ravel()  # Flatten to 1D
+        else:
+            raise ValueError('first_training_output must be 1D or 2D (column vector)')
+        
+        # Must match number of samples
+        if len(output_arr) != n_samples:
+            raise ValueError(
+                f'Number of outputs ({len(output_arr)}) must match number of input samples ({n_samples})'
+            )
+        
+        # Store as 1D array for simplicity (easy to extend later)
+        self.__training_outputs = output_arr  # Shape: (n_samples,), dtype: int
+
+    def add_training_data(self, new_inputs, new_outputs):
+        """
+        Add more training samples to the model.
+        
+        Parameters:
+            new_inputs: list of lists, tuple, or np.ndarray of shape (n_new_samples, input_size)
+            new_outputs: list, tuple, or np.ndarray of integer scalars (length n_new_samples)
+        """
+        # --- Validate and convert new_inputs ---
+        if not isinstance(new_inputs, np.ndarray):
+            new_input_arr = np.array(new_inputs, dtype=int)
+        else:
+            new_input_arr = new_inputs.astype(int) if not np.issubdtype(new_inputs.dtype, np.integer) else new_inputs
+        
+        if new_input_arr.ndim != 2:
+            raise ValueError('new_inputs must be 2D (n_samples × input_size)')
+        if new_input_arr.shape[1] != self.__input_size:
+            raise ValueError(f'Each new sample must have {self.__input_size} features, got {new_input_arr.shape[1]}')
+        if new_input_arr.shape[0] == 0:
+            raise ValueError('Cannot add zero new samples')
+        
+        # --- Validate and convert new_outputs ---
+        if not isinstance(new_outputs, np.ndarray):
+            new_output_arr = np.array(new_outputs, dtype=int)
+        else:
+            new_output_arr = new_outputs.astype(int) if not np.issubdtype(new_outputs.dtype, np.integer) else new_outputs
+        
+        if new_output_arr.ndim == 2:
+            if new_output_arr.shape[1] != 1:
+                raise ValueError('If 2D, new_outputs must be a column vector')
+            new_output_arr = new_output_arr.ravel()
+        elif new_output_arr.ndim != 1:
+            raise ValueError('new_outputs must be 1D or 2D column vector')
+        
+        if len(new_output_arr) != new_input_arr.shape[0]:
+            raise ValueError('Number of new outputs must match number of new input samples')
+        
+        # --- Concatenate to existing data ---
+        self.__training_inputs = np.vstack([self.__training_inputs, new_input_arr])
+        self.__training_outputs = np.concatenate([self.__training_outputs, new_output_arr])
+        
+        print(f"Added {new_input_arr.shape[0]} new samples. Total samples: {self.__training_inputs.shape[0]}")
+
+    def train(self):
+        if self.__input_size == 1: hidden_layer_dim = (round(log2(len(self.__training_inputs))))
+        else: 
+            number_of_hidden_layers = round(log2(self.__input_size))
+            hidden_layer_len = round(log2(len(self.__training_inputs)))
+            hidden_layer_dim = [[hidden_layer_len] * number_of_hidden_layers]
+        self.__mlp_classifier = MLPClassifier(hidden_layer_sizes=hidden_layer_dim, max_iter=1000, random_state=42, solver='adam', activation='relu')
+        self.__mlp_classifier.fit(self.__training_inputs,self.__training_outputs)
+
 def relu(input):
     if input <= 0:
         return 0
     else: return input
 
+def prod_save(self,path,models):         
+    with open('custom_nn.py','w') as model:
+        #store model as an python script that is executed via terminal.
+        #the script take a string arg as an input
+        #encode the string input arg
+        #store the wieghts and biases
+        #decode output to string
+        #all output values of nodes must pass through relu
+        #only save minimal feature for lowest resource requirements
+        if isinstance(models,(tuple,list)) == True:
+            for model in models:
+                if isinstance(model,text_model) == False and isinstance(model,identify_model) == False: raise TypeError('arg models contains a non-model class datatype')
+        else: raise TypeError('arg models is neither type list or tuple')
+                
+        with open(f'{path}','w') as new_model:
+            new_model.write("import numpy as np")
+            new_model.write("parameters_wieghts = np.array(")
+            new_model.write("from sys import argv")
+            wieght_array = []
+            for layer in self.__layers:
+                temp_array = []
+                for node in layer:
+                    temp_array.append(node.get_state[0])
+                wieght_array.append(temp_array)
+            new_model.write(f"{wieght_array}")
+            new_model.write(",int32)")
+            new_model.write("parameters_bias = np.array(")
+            bias_array = []
+            for layer in self.__layers:
+                temp_array = []
+                for node in layer:
+                    temp_array.append(node.get_state[1])
+                bias_array.append(temp_array)
+            new_model.write(f"{bias_array}")
+            new_model.write(",int32)")
+            new_model.write(')')
+            new_model.write("if __name__ == '__Main__'")
+            new_model.write("if isinstance(argv[1],str) == False: raise Warning('')")
+
+    def dev_save(self,path): 
+        #save all features for later
+        #for example self.__inputs and self.__outputs so that it does not have to retrain
+        pass
+
 token_words = {}
 token_words = tokenize(token_words,df)
-model = text_model((100,100,100,100),token_words,10,100)
+model = text_model((100,10,100),token_words,10,1000)
 for text, code in df[['Text', 'Code']].values:
-    model.add_data(text, code)
+    model.add_training_data(text, code)
 model.train()
+print(f"model output: {model.output('print ')}")
 print(f"model output: {model.output('print ')}")
