@@ -9,51 +9,88 @@ from math import log2
 import matplotlib.pyplot as mpl
 import numpy as np
 import pandas as pd
-import array
+import array,os
 
 df = pd.read_csv('ML\dataset.csv',sep=';',engine='python',dtype=str)
 df['Text'] = df['Text'].astype(str)
 df['Code'] = df['Code'].astype(str)
 
-def tokenize(token_dict,dataframe):
-    if isinstance(token_dict,dict) == False:raise TypeError('First arg is not type dict')
-    elif isinstance(dataframe,pd.DataFrame) == False: TypeError('second arg is not type dataframe')
-    elif 'Text' not in dataframe.columns: raise NameError('column Text was not found')
-    elif len(token_dict) == 0:
-        #'!unkown!' is used when a word is not stored in the token dict
-        token_dict = {'':0,'(':1,')':2,'    ':3,':':4,'[':5,']':6,'!unkown!':7}
-    for t in df['Text']:
-        sen = sent_tokenize(t)
-        for line in sen:
-            words = word_tokenize(line)
+def tokenize(token_dict,dataset):
+    if not isinstance(token_dict, dict):
+        raise TypeError("First argument 'token_dict' must be a dict")
+    
+    # Initialize default tokens if dictionary is empty
+    if len(token_dict) == 0:
+        token_dict = {
+            '': 0,        # padding or empty
+            '(': 1,
+            ')': 2,
+            '    ': 3,    # indentation (4 spaces)
+            ':': 4,
+            '[': 5,
+            ']': 6,
+            '!unknown!': 7  # unknown token
+        }
+    
+    # Case 1: Dataset is a pandas DataFrame
+    if isinstance(dataset, pd.DataFrame):
+        if dataset.empty:
+            raise ValueError("DataFrame is empty")
+        
+        # Process all columns that contain strings/objects
+        text_columns = dataset.select_dtypes(include=['object', 'string']).columns
+        if len(text_columns) == 0:
+            raise ValueError("DataFrame has no columns with text data (object/string dtype)")
+        
+        for col in text_columns:
+            for value in dataset[col].dropna():  # Skip NaN
+                if not isinstance(value, str):
+                    continue
+                value = str(value)  # Ensure it's string
+                sentences = sent_tokenize(value)
+                for sentence in sentences:
+                    words = word_tokenize(sentence)
+                    for word in words:
+                        word = word.lower()
+                        # Skip common punctuation
+                        if word in {',', '.', '!', '?', ';', ':', '"', "'", '(', ')', '[', ']', '{', '}'}:
+                            continue
+                        if word not in token_dict:
+                            token_dict[word] = len(token_dict)
+    
+    # Case 2: Dataset is a string path to a text file
+    elif isinstance(dataset, str):
+        if not os.path.isfile(dataset):
+            raise FileNotFoundError(f"Text file not found: {dataset}")
+        
+        with open(dataset, 'r', encoding='utf-8') as f:
+            text = f.read()
+        
+        sentences = sent_tokenize(text)
+        for sentence in sentences:
+            words = word_tokenize(sentence)
             for word in words:
                 word = word.lower()
-                if word == ',' or word == '.' or word == '!' or word == '?':
+                if word in {',', '.', '!', '?', ';', ':', '"', "'", '(', ')', '[', ']', '{', '}'}:
                     continue
                 if word not in token_dict:
                     token_dict[word] = len(token_dict)
-    for t in df['Code']:
-        sen = sent_tokenize(t)
-        for line in sen:
-            words = word_tokenize(line)
-            for word in words:
-                word = word.lower()
-                if word == ',' or word == '.' or word == '!' or word == '?':
-                    continue
-                if word not in token_dict:
-                    token_dict[word] = len(token_dict)
+    
+    else:
+        raise TypeError("Second argument 'dataset' must be a pandas.DataFrame or a file path (str)")
+    
     return token_dict
 
 class node:
     def __init__(self):
         self.__wieght = randint(1,2^16)
-        self.__bias = randint(1,2^16)
+        self.__bias = randint(1,2^4)
 
     def get_state(self):
         return self.__wieght,self.__bias
     
     def output(self,input):
-        return relu(self.__wieght*input+self.__bias)
+        return self.__wieght*input+self.__bias
 
     def change_wieght(self,value):
         self.__wieght += value
@@ -74,7 +111,6 @@ class text_model:
         self.__token_reverse = tuple(self.__token.keys())#used to decode text
         self.__training_inputs = []#stores the tokenizes inputs
         self.__training_outputs = []#stores the tokenizes outputs
-        self.__loss_list = []
         self.__avg_loss = None
         #initalize model
         for num in self.__dim:
@@ -120,6 +156,7 @@ class text_model:
         if isinstance(input,str) == False:raise TypeError("Input is not type: str")
         elif len(input) > self.__dim[0]: raise ValueError(f"input is too large\ninput size:{len(input)}\ninput layer size:{self.__dim[0]}")
         elif isinstance(output,str) == False:raise TypeError("output is not type: str")
+        
         else:
             #encode data
             input = self.encode(input)
@@ -137,25 +174,23 @@ class text_model:
             elif len(output) > self.__dim[0]:raise Warning('input size is larger than context window')
             output.extend(padding)
 
-            self.__training_inputs.append(tuple(input))
-            self.__training_inputs.append(tuple(output))
+            self.__training_inputs.append(input)
+            self.__training_outputs.append(output)
 
     def train(self):
         #calc loss
         self.forward_pass_all_data()
 
-        #change wieghts and bias
-        direction_wieght = 1
-        direction_bias = 1
-        improvement_after_weight_change = 0#the change in loss, positive value = decrease in loss
-        improvement_after_bias_change = 0#the change in loss, positive value = decrease in loss
         for layer in self.__layers:
             for node in layer:
-                for _ in range(self.__epoch):
-                    #calc value to change by
-                    change_amount_wieght = self.__learning_rate * improvement_after_weight_change * direction_wieght
-                    change_amount_bias = self.__learning_rate * improvement_after_bias_change * direction_bias
+                change_amount_wieght = self.__learning_rate
+                change_amount_bias = self.__learning_rate
+                direction_wieght = 1
+                direction_bias = 1
+                improvement_after_weight_change = 0#the change in loss, positive value = decrease in loss
+                improvement_after_bias_change = 0#the change in loss, positive value = decrease in loss
 
+                for e in range(self.__epoch):
                     #change node wieght or bias
                     #wieght
                     node.change_wieght(change_amount_wieght)
@@ -164,6 +199,7 @@ class text_model:
                     if improvement_after_weight_change < 0: 
                         node.change_wieght(-change_amount_wieght)#revert change
                         direction_wieght *= -1#flip direction
+                        print(f'fliped weight direction after {e} epoch as improvement was {improvement_after_weight_change}')
 
                     #bias
                     node.change_bias(change_amount_bias)
@@ -172,18 +208,30 @@ class text_model:
                     if improvement_after_bias_change < 0: 
                         node.change_bias(-change_amount_bias)#revert change
                         direction_bias *= -1#flip direction
+                        print(f'fliped bias direction after {e} epoch as improvement was {improvement_after_bias_change}')
 
-                    if (improvement_after_weight_change + improvement_after_bias_change)/2 < 0.001: break
-            print(self.__avg_loss)
+                    if (improvement_after_weight_change + improvement_after_bias_change)/2 < 0.001 and e > self.__epoch//10: 
+                        print(f'reached min improvement threshold after {e} epoch')
+                        break
+                    elif isinstance(self.__avg_loss,(float,int)) == False: raise TypeError('loss value')
+
+                    #calc value to change by
+                    change_amount_wieght = self.__learning_rate * improvement_after_weight_change * direction_wieght
+                    change_amount_bias = self.__learning_rate * improvement_after_bias_change * direction_bias
+                    print(f'loss:{self.__avg_loss}')
+            print(f'loss:{self.__avg_loss}')
 
     def forward_pass_all_data(self):
+        if len(self.__training_inputs) != len(self.__training_outputs): raise ValueError(f'the size of training inputs and outputs are not the same\nsize-\ntraining input:{len(self.__training_inputs)}\ntraining output:{len(self.__training_outputs)}')
+
         data_forward = 0
         data_forward_next = 0
-        loss = 0
-        new_loss_list = []
-        new_avg_loss = 0
+        sum_loss = 0#stores the sum of all loss values of output nodes for an individual input
+        total_avg_loss = 0
+        list_of_average_loss = []#stores the
 
         for nth_data in range(len(self.__training_inputs)):
+            sum_loss = 0
             for n_input in range(len(self.__layers[0])):#pass input into input layer
                 node = self.__layers[0][n_input]
                 input_data = self.__training_inputs[nth_data][n_input]
@@ -199,28 +247,27 @@ class text_model:
 
             for n_output in range(len(self.__layers[-1])):#output layer
                 node = self.__layers[-1][n_output]
-                loss += node.output(data_forward) - self.__training_outputs[nth_data][n_output]
+                sum_loss += abs(node.output(data_forward) - self.__training_outputs[nth_data][n_output])
 
             #calc loss for an individual input
             data_forward = data_forward_next
             data_forward_next = 0
-            loss = loss/len(self.__layers[-1])
-            new_loss_list.append(loss)
+            list_of_average_loss.append(sum_loss/len(self.__layers[-1]))
         
         #calc avg of loss for all inputs
-        for l in new_loss_list:
-            new_avg_loss += l
-        new_avg_loss = new_avg_loss/len(new_loss_list)
+        for average_loss in list_of_average_loss:
+            total_avg_loss += average_loss
+        total_avg_loss = total_avg_loss/len(list_of_average_loss)
 
         if self.__avg_loss == None: 
-            self.__avg_loss = new_avg_loss
+            self.__avg_loss = total_avg_loss
+            print('self.__avg_loss was None')
             return None#only used for when calculating the loss for the first time
-        else:
-            delta_loss = self.__avg_loss - new_avg_loss
-            self.__loss_list = new_loss_list
-            self.__avg_loss = new_avg_loss
+        elif isinstance(total_avg_loss,float) == True:
+            delta_loss = self.__avg_loss - total_avg_loss#positive value is improvement
+            self.__avg_loss = total_avg_loss
             return delta_loss
-        
+        else: raise TypeError('self.__avg_loss was not float')
     def output(self,input):
         if isinstance(input,str) == False:raise TypeError("Input is not type: str")
         data = self.encode(input)
@@ -265,6 +312,7 @@ class text_model:
         model_bias_in_array_format = []
         model_layer_weights = []
         model_layer_bias = []
+
         for layer in self.__layers:
             for node in layer:
                 state = node.get_state()
@@ -272,8 +320,10 @@ class text_model:
                 model_layer_bias.append(state[1])
             model_weight_in_array_format.append(model_layer_weights)
             model_bias_in_array_format.append(model_layer_bias)
+
         model_weight_in_array_format = np.array(model_bias_in_array_format)
         model_bias_in_array_format = np.array(model_bias_in_array_format)
+
         if model_weight_in_array_format.ndim() != 2:
             raise TypeError('Failed to convert model weights to a 2D numpy array')
         elif model_bias_in_array_format.ndim() != 2:
@@ -284,7 +334,6 @@ class identify_model:
     def __init__(self, input_size, first_training_input, first_training_output):
         self.__input_size = int(input_size)
         self.__mlp_classifier = None
-        self.__knn = None
         
         # --- Handle first_training_input: must be 2D (n_samples, input_size) ---
         if not isinstance(first_training_input, np.ndarray):
@@ -352,13 +401,13 @@ class identify_model:
             new_outputs: list, tuple, or np.ndarray of integer scalars (length n_new_samples)
         """
         # --- Validate and convert new_inputs ---
-        if not isinstance(new_inputs, np.ndarray):
-            new_input_arr = np.array(new_inputs, dtype=int)
+        if not isinstance(new_inputs, (np.ndarray,list,tuple)):
+             new_input_arr = np.array(new_inputs, dtype=int)
         else:
             new_input_arr = new_inputs.astype(int) if not np.issubdtype(new_inputs.dtype, np.integer) else new_inputs
         
         if new_input_arr.ndim != 2:
-            raise ValueError('new_inputs must be 2D (n_samples × input_size)')
+            raise ValueError('new_inputs must be 2D (n_samples x input_size)')
         if new_input_arr.shape[1] != self.__input_size:
             raise ValueError(f'Each new sample must have {self.__input_size} features, got {new_input_arr.shape[1]}')
         if new_input_arr.shape[0] == 0:
@@ -387,13 +436,26 @@ class identify_model:
         print(f"Added {new_input_arr.shape[0]} new samples. Total samples: {self.__training_inputs.shape[0]}")
 
     def train(self):
-        if self.__input_size == 1: hidden_layer_dim = (round(log2(len(self.__training_inputs))))
+        if self.__input_size == 1: hidden_layer_depth = round(log2(len(self.__training_inputs)))
         else: 
             number_of_hidden_layers = round(log2(self.__input_size))
             hidden_layer_len = round(log2(len(self.__training_inputs)))
-            hidden_layer_dim = [[hidden_layer_len] * number_of_hidden_layers]
-        self.__mlp_classifier = MLPClassifier(hidden_layer_sizes=hidden_layer_dim, max_iter=1000, random_state=42, solver='adam', activation='relu')
+            hidden_layer_depth = [[hidden_layer_len] * number_of_hidden_layers]
+        self.__mlp_classifier = MLPClassifier(hidden_layer_sizes=hidden_layer_depth, max_iter=1000, random_state=42, solver='adam', activation='relu')
         self.__mlp_classifier.fit(self.__training_inputs,self.__training_outputs)
+
+    def output(self,input):
+        # --- Validate and convert new_inputs ---
+        if not isinstance(input, (np.ndarray,list,tuple)):
+            input = np.array(input, dtype=int)
+        else:
+            input = input.astype(int) if not np.issubdtype(input.dtype, np.integer) else input
+
+        if len(input) != 1: raise ValueError('only a single input is permitted')
+        elif input.shape[1] <= self.__input_size: raise ValueError('size of input is too small')
+        elif input.shape[1] >= self.__input_size: raise ValueError('size of input is too large')
+
+        return self.__mlp_classifier.predict(input)
 
 def relu(input):
     if input <= 0:
@@ -446,7 +508,7 @@ def prod_save(self,path,models):
 
 token_words = {}
 token_words = tokenize(token_words,df)
-model = text_model((100,10,100),token_words,10,1000)
+model = text_model((100,10,100),token_words,1,1000)
 for text, code in df[['Text', 'Code']].values:
     model.add_training_data(text, code)
 model.train()
