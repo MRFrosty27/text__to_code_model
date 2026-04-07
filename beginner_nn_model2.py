@@ -1,6 +1,4 @@
-from sklearn.linear_model import LinearRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import MLPClassifier, MLPRegressor
+
 from nltk.tokenize import word_tokenize,sent_tokenize
 from random import randint
 from textblob import Word
