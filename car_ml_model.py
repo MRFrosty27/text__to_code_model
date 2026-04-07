@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import sys, joblib
+import os, joblib
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier, MLPRegressor
@@ -9,16 +9,28 @@ from car_web_scrape import Brand_names_autotrader as brand_names
 
 colors = ['#d62728', '#ff7f0e', '#ffdb58', '#2ca02c', '#1f77b4']  # red, orange, yellow, green, blue
 
-datasets = {}
+model_datasets = {}
 for name in brand_names:
-    try:
-        path = f'autotrader_{name}_dataset.csv'
-        datasets[name] = pd.read_csv(path)
-    except:
-        path = f"carzcoza_{name}_dataset.csv" 
-        datasets[name] = pd.read_csv(path)
+    path1 = f'autotrader_{name}_dataset.csv'
+    path2 = f'carzcoza_{name}_dataset.csv'
 
-for name,ds in datasets.items:
+    if os.path.exists(path1):
+        dataset = pd.read_csv(path1)
+        print(f"Loaded: {path1}")
+    elif os.path.exists(path2):
+        dataset = pd.read_csv(path2)
+        print(f"Loaded: {path2}")
+    else:
+        print(f"Warning: Neither {path1} nor {path2} found. Skipping {name}.")
+        continue
+
+    for value in dataset['Model'].unique():
+        group_df = pd.DataFrame(dataset['Model'] == value)
+        if len(group_df) > 1:
+            model_datasets[value] = group_df
+
+
+for name,ds in model_datasets.items:
     x = ds['Price_rating'].copy()
     for pr in x:
         if pr =='No rating':
@@ -55,17 +67,16 @@ for name,ds in datasets.items:
 
     plt.grid(True, alpha=0.3, linestyle='--')
     plt.legend(title='Price Rating', title_fontsize=11, fontsize=10, loc='upper left')
-
+    plt.show()
     
-
     # Train / test split
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
     
+    print("Training model...")
     model = LinearRegression()
     model.fit(X_train,y_train)
     model.predict(X_test)
-    model_filename = f''
-    joblib.dump()
+    model_filename = f'{name}_ml_model.joblib'
+    joblib.dump(model,model_filename)
 
 
-print("Training model...")
