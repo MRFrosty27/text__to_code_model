@@ -1,5 +1,6 @@
 import requests,csv,time,random
 from bs4 import BeautifulSoup
+from sys import exit
 
 
 
@@ -14,7 +15,6 @@ Brand_names_autotrader = ('Audi','BMW','BYD','Bentley','Ferrari','Fiat','Ford','
 Brand_names_cars_coza = ('Toyota','Audi','BMW','BYD','Bentley','Ferrari','Fiat','Ford','GWM','Haval','Honda','Hyundai','Isuzu','JAECOO','Jaguar','Jeep','Jetour','Kia','Lamborghini','Land Rover','Lexus','MINI','Mahindra','Maserati','Mazda','McLaren','Mercedes-AMG','Mercedes-Benz','Mitsubishi','Nissan','OMODA','Porche','Rolls-Royce','Susuki','Volkswagen','Volvo')
 
 def scrape_autotrader(brand):
-    data = []
     base_url = f"https://www.autotrader.co.za/cars-for-sale/{brand}"
     
     response = requests.get(base_url, headers=HEADERS)
@@ -28,58 +28,82 @@ def scrape_autotrader(brand):
     max_page_number = max_page_number[-1].get_text()
     print(f"max pages- {max_page_number}")
 
-    for page in range(1, int(max_page_number)):
-        print(f'Next page\n page {page} out of {max_page_number}')
-        url = f"{base_url}?pagenumber={page}&year=more-than-2015" if page > 1 else base_url
-        response = requests.get(url, headers=HEADERS)
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        if response.status_code != 200:
-            print(f"Error fetching AutoTrader page {page}: {response.status_code}")
-            continue
-
-        listings = base_element.find_all("a")
-        
-        for listing in listings:
-            print('next listing')
-            try:
-                price = listing.find('h2',class_='e-price__Yd0hRaoM6rg-')
-                price = price.get_text()
-                print(price)
-
-                price_rating = listing.find('span',class_='e-rating-text__WFA6pv-cUx4-')
-                price_rating = price_rating.get_text()
-                print(price_rating)
-
-                milage_and_Manual_Automatic = listing.find_all('span',class_='e-text__ZIvs3UMtWxs-')
-                milage = milage_and_Manual_Automatic[1].get_text()
-                Manual_Automatic = milage_and_Manual_Automatic[2].get_text()
-                print(milage)
-                print(Manual_Automatic)
-
-
-                variant = listing.find('span', class_='e-variant-title__4VK0xJjilbI-')
-                variant = variant.get_text()
-                print(variant)
-
-                model = listing.find_all('span',class_='e-make-model-title__x6ofmTGPOrM-')
-                model = model.get_text()
-                print(model)
-                
-                print({"Brand": brand, "Model": model[5:],"Variant": variant,"Year":model[0:4],"Milage": milage[0:-3], "Manual/Automatic": Manual_Automatic,"Price_rating": price_rating, "Price": price})
-                data.append({"Brand": brand, "M odel": model[5:],"Variant": variant,"Year":model[0:4],"Milage": milage[0:-3], "Manual/Automatic": Manual_Automatic,"Price_rating": price_rating[0:-5], "Price": price})
-            except:
-                print('Failed to get data')
-                continue
-            
-        time.sleep(random.randint(2,5))  # Be polite
-
     csv_file = f"autotrader_{brand}_dataset.csv"
-    with open(csv_file, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=["Brand", "Model", "Variant", "Year", "Milage", "Price_rating", "Price"])
+    with open(csv_file, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["Brand", "Model", "Variant", "Year", "Milage", "Manual_Automatic", "Price_rating", "Price"])
         writer.writeheader()
-        writer.writerows(data)
-    return f
+        
+        for page in range(1, int(max_page_number)+1):
+            print(f'Next page\n page {page} out of {max_page_number}')
+            url = f"{base_url}?pagenumber={page}&year=more-than-2015" if page > 1 else base_url
+            response = requests.get(url, headers=HEADERS)
+            soup = BeautifulSoup(response.text, "html.parser")
+            base_element = soup.find('div',class_='e-results-body__e2m4a-Isq-Q-')
+
+            if response.status_code != 200:
+                print(f"Error fetching AutoTrader page {page}: {response.status_code}")
+                continue
+
+            listings = base_element.find_all("a")
+            
+            for listing in listings:
+                #print('next listing')
+                try:
+                    price = listing.find('h2',class_='e-price__Yd0hRaoM6rg-')
+                    price = price.get_text()
+                except:
+                    price = None
+                    print('Failed to get price')
+
+                try:
+
+                    price_rating = listing.find('span',class_='e-rating-text__WFA6pv-cUx4-')
+                    price_rating = price_rating.get_text()
+                except:
+                    price_rating = None
+                    print('Failed to get price rating')
+
+                try:
+                    milage_and_Manual_Automatic = listing.find_all('span',class_='e-text__ZIvs3UMtWxs-')
+                    milage = milage_and_Manual_Automatic[1].get_text()
+                    Manual_Automatic = milage_and_Manual_Automatic[2].get_text()
+                    milage = milage[0:-3]
+
+                except:
+                    milage = None
+                    Manual_Automatic = None
+                    print('Failed to get milage or Manual_Automatic')
+
+                try:
+                    variant = listing.find('span', class_='e-variant-title__4VK0xJjilbI-')
+                    variant = variant.get_text()
+                except:
+                    variant = None
+                    print('Failed to get variant')
+
+                try:
+                    model = listing.find_all('span',class_='e-make-model-title__x6ofmTGPOrM-')
+                    print('retrieved html')
+                    model = model[0].get_text()
+                    print('converted to text')
+                    print(model)
+                    model = model[5:]
+                    year = model[0:4]
+                except:
+                    model = None
+                    year = None
+                    print('Failed to get model')
+
+                try:
+                    if model == None and year == None and variant == None and milage == None and Manual_Automatic == None and price_rating == None and price == None:
+                        pass
+                    else:
+                        data_dict = {"Brand": brand, "Model": model,"Variant": variant,"Year":year,"Milage": milage, "Manual_Automatic": Manual_Automatic,"Price_rating": price_rating, "Price": price}
+                        writer.writerow(data_dict)
+                except:
+                    print('Failed to write dict to csv')
+            f.flush()
+            time.sleep(random.randint(2,5))
     
 def scrape_cars_co_za(brand):
     data = []

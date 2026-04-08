@@ -1,9 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import os, joblib
-from sklearn.linear_model import LinearRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import MLPClassifier, MLPRegressor
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from car_web_scrape import Brand_names_autotrader as brand_names
 
@@ -70,13 +68,16 @@ for name,ds in model_datasets.items:
     plt.show()
     
     # Train / test split
-    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+    train_dataset = pd.DataFrame(ds['Price_rating'] != 0)
+    test_dataset = pd.DataFrame(ds['Price_rating'] == 0)
     
     print("Training model...")
-    model = LinearRegression()
-    model.fit(X_train,y_train)
-    model.predict(X_test)
+    model = RandomForestClassifier(n_estimators=100, random_state=42,n_jobs=-1)
+    model.fit(train_dataset[['Price','Year']],train_dataset['Price_rating'])
+    model.predict(test_dataset[['Price','Year']])
     model_filename = f'{name}_ml_model.joblib'
     joblib.dump(model,model_filename)
 
 
+if __name__ == '__main__':
+    pass 
