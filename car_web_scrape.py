@@ -28,7 +28,7 @@ def scrape_autotrader(brand):
     max_page_number = max_page_number[-1].get_text()
     print(f"max pages- {max_page_number}")
 
-    csv_file = f"autotrader_{brand}_dataset.csv"
+    csv_file = f"D:/Python code/cloned repo/text__to_code_model/autotrader_{brand}_dataset.csv"
     with open(csv_file, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=["Brand", "Model", "Variant", "Year", "Milage", "Manual_Automatic", "Price_rating", "Price"])
         writer.writeheader()
@@ -104,7 +104,7 @@ def scrape_autotrader(brand):
                     print('Failed to write dict to csv')
             f.flush()
             time.sleep(random.randint(2,5))
-    
+"""
 def scrape_cars_co_za(brand):
     data = []
     first_page = f"https://www.cars.co.za/usedcars/?make_model_variant={brand}&sort=sort_rank&price_type=listing_price&vfs_year=2015-2026&P=1"
@@ -168,10 +168,12 @@ def scrape_cars_co_za(brand):
         writer.writeheader()
         writer.writerows(data)
     return f
+"""
 
 for brand in Brand_names_autotrader:
     scrape_autotrader(brand)
-    time.sleep(random.randint(5,10))
+    time.sleep(random.randint(5,10)) 
+    break
 """
 print('started scraping from carz.co.za')
 for brand in Brand_names_cars_coza:
