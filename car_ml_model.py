@@ -9,9 +9,9 @@ colors = ['#d62728', '#ff7f0e', '#ffdb58', '#2ca02c', '#1f77b4']  # red, orange,
 def plot_data(dataframe):
     plt.figure(figsize=(10, 6))
     for rating in range(5):
-        mask = (y == rating)
+        mask = dataframe['Price_rating_num'] == rating #Fix!
         plt.scatter(dataframe.loc[mask, 'Price'], 
-                    dataframe.loc[mask, 'Price_rating_num'], # or just y[mask]
+                    dataframe.loc[mask, 'Price_rating_num'], 
                     c=colors[rating],
                     label=f'Rating {rating}',
                     s=70, alpha=0.85, edgecolors='black', linewidth=0.6)
@@ -41,18 +41,19 @@ rating_map = {
 }
 
 for name in brand_names:
-    filename = f"autotrader_{name}_dataset.csv"
+    script_path = os.path.dirname(os.path.abspath(__file__))
+    filename = fr"{script_path}\autotrader_{name}_dataset.csv"
     
     if os.path.exists(filename):
-        dataset = pd.read_csv(filename)
-        model_datasets[name] = pd.DataFrame(dataset)
+        if os.path.getsize(filename) == 0: raise Warning(f'{filename} is empty')
+        model_datasets[name] = pd.read_csv(filename,sep=',')
         print(f"Loaded: {filename}")
     else:
         print(f"Warning: {filename} not found. Skipping {name}.")
 
 for name, ds in model_datasets.items():# fixed: .items()
     # === Convert Price_rating to numeric ===
-    ds = ds.copy()# avoid modifying original
+    ds = ds.copy()
     ds['Cleaned_Model'] = ds['Model'].apply(clean_model_name)
     for model_name in sorted(ds['Cleaned_Model'].unique()):
         model_ds = ds[ds['Cleaned_Model'] == model_name].copy()
@@ -60,8 +61,7 @@ for name, ds in model_datasets.items():# fixed: .items()
         plot_data(model_ds)
         train_ds = model_ds.dropna(subset=['Price_rating_num'])
         train_ds = train_ds[train_ds['Price_rating_num'] != 0]
-        if len(train_ds) == 0:
-            continue
+        if len(train_ds) == 0: raise Warning(f'could not create training data for {model_name}')
         x_train = train_ds[['Price', 'Year']]
         y_train = train_ds['Price_rating_num']
         test_ds = train_ds[train_ds['Price_rating_num'] == 0]
@@ -74,21 +74,22 @@ for name, ds in model_datasets.items():# fixed: .items()
         joblib.dump(model, model_filename)
 
 if __name__ == '__main__':
+    script_path = os.path.dirname(os.path.abspath(__file__))
     available_brands = list(brand_names)
     print("Available brands:")
     for i, brand in enumerate(available_brands, 1):
         print(f"{i}. {brand}")
     brand_idx = int(input("Select brand number: ")) - 1
     selected_brand = available_brands[brand_idx]
-    filename = f"autotrader_{name}_dataset.csv"
+    filename = fr"{script_path}\autotrader_{name}_dataset.csv"
     if os.path.exists(filename):
-        dataset = pd.DataFrame(pd.read_csv(filename))
+        dataset = pd.read_csv(filename)
         print(f"Loaded: {filename}")
     else:
         print(f"Warning: {filename} not found. Skipping {name}.")
     
     available_models = sorted(dataset['Model'].unique())
-    print(f"\nAvailable models for {selected_brand}:")
+    print(fr"\nAvailable models for {selected_brand}:")
     for i, model in enumerate(available_models, 1):
         print(f"{i}. {model}")
     model_idx = int(input("Select model number: ")) - 1
@@ -102,4 +103,4 @@ if __name__ == '__main__':
         year = int(input("Enter car year: "))
         prediction = model.predict([[price, year]])[0]
         rating_map = {0:'No rating',1:'High Price',2:'Low Price',3:'Fair Price',4:'Great Price'}
-        print(f"\nThe car's price rating is: {rating_map[prediction]}")
+        print(fr"\nThe car's price rating is: {rating_map[prediction]}")

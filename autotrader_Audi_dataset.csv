@@ -1,7 +1,4 @@
 Brand,Model,Variant,Year,Milage,Manual_Automatic,Price_rating,Price
-Audi,,,,,,Fair Price,
-Audi,,,,,,High Price,
-Audi,,,,,,No Rating,
 Audi,Audi Q3,Sportback 40TFSI Quattro S Line,Audi,64 250,Automatic,Great Price,R 539 990
 Audi,Audi A1,Sportback 35TFSI,Audi,99 000,Automatic,Great Price,R 299 950
 Audi,Audi Q2,35TFSI Advanced line,Audi,91 000,Automatic,Great Price,R 339 900
@@ -12,14 +9,10 @@ Audi,Audi R8,5.2 V10 Quattro Auto,Audi,85 000,Automatic,No Rating,R 1 399 900
 Audi,Audi Q3,2.0TDi,Audi,148 800,Manual,Fair Price,R 179 950
 Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,6 731,Automatic,Great Price,R 499 995
 Audi,Audi Q5,40TDI Quattro Sport S Line Sports,Audi,70 000,Automatic,Great Price,R 479 900
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
 Audi,Audi A1,Sportback 35TFSI S Line,Audi,64 000,Automatic,No Rating,R 449 900
 Audi,Audi Q5,Sportback 40TDI Quattro S Line,Audi,26 125,Automatic,Great Price,R 799 900
 Audi,Audi A3,Sportback 35TFSI Urban Edition,Audi,37 000,Automatic,Great Price,R 509 900
 Audi,Audi TT,Coupe 2.0TFSI,Audi,97 000,Automatic,Fair Price,R 359 899
-Audi,ined,,ined,,,,
 Audi,Audi TT,RS Coupe Quattro Auto,Audi,66 000,Automatic,No Rating,R 599 950
 Audi,Audi S5,Coupe Quattro,Audi,162 000,Manual,No Rating,R 159 950
 Audi,Audi A4,40TFSI,Audi,87 000,Automatic,No Rating,R 499 990
@@ -31,23 +24,16 @@ Audi,Audi A3,Sedan 35TFSI Black Edition,Audi,14 300,Automatic,Fair Price,R 679�
 Audi,Audi A1,Sportback 30TFSI,Audi,64 000,Automatic,No Rating,R 369 900
 Audi,Audi RS5,Coupe Quattro,Audi,60 000,Automatic,No Rating,R 1 249 900
 Audi,Audi Q3,Sportback 35TFSI Black Edition,Audi,9 500,Automatic,No Rating,R 769 900
-Audi,,,,,,No Rating,
-Audi,,,,,,Low Price,
-Audi,,,,,,Great Price,
 Audi,Audi TT,Coupe 2.0TFSI,Audi,76 294,Automatic,Fair Price,R 399 950
 Audi,Audi Q3,Sportback 35TFSI S Line,Audi,58 035,Automatic,Fair Price,R 609 900
 Audi,Audi A1,Sportback 1.4TFSI SE Auto,Audi,120 000,Automatic,Fair Price,R 219 900
 Audi,Audi RS5,Sportback Quattro,Audi,23 000,Automatic,No Rating,R 1 349 900
-Audi,ined,,ined,,,,
 Audi,Audi RS5,Coupe Quattro,Audi,60 000,Automatic,No Rating,R 1 249 900
 Audi,Audi A4,1.8T SE Sport Edition Plus Auto,Audi,167 789,Automatic,No Rating,R 179 990
 Audi,Audi A1,Sportback 30TFSI,Audi,64 000,Automatic,No Rating,R 369 900
 Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 654 710
 Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 637 129
 Audi,Audi Q2,Sportback 35TFSI Black Edition  110kW,Audi,1 000,Automatic,No Rating,R 789 900
-Audi,,,,,,Fair Price,
-Audi,,,,,,No Rating,
-Audi,,,,,,Fair Price,
 Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 654 710
 Audi,Audi Q8,55TFSI Quattro,Audi,50 000,Automatic,Fair Price,R 929 900
 Audi,Audi Q5,Sportback 40TDI Quattro Black Edition,Audi,3 000,Automatic,No Rating,R 1 189 000
@@ -3557,261 +3543,3 @@ Audi,Audi Q5,40TDI Quattro Sport S Line Sports,Audi,70 000,Automatic,Great Pric
 Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,6 731,Automatic,Great Price,R 499 995
 Audi,Audi Q3,Sportback 35TFSI Urban Edition,Audi,66 854,Automatic,Great Price,R 489 000
 Audi,Audi R8,5.2 V10 Quattro Auto,Audi,85 000,Automatic,No Rating,R 1 399 900
-Audi,,,,,,Fair Price,
-Audi,,,,,,Fair Price,
-Audi,,,,,,Fair Price,
-Audi,Audi S4,TFSI Quattro,Audi,19 536,Automatic,No Rating,R 899 000
-Audi,Audi Q5,Sportback 40TDI Quattro S Line,Audi,66 452,Automatic,Fair Price,R 719 900
-Audi,Audi A3,Sedan 35TFSI,Audi,127 000,Automatic,Fair Price,R 412 888
-Audi,Audi S3,Sportback TFSI Quattro,Audi,10 300,Automatic,No Rating,R 1 119 000
-Audi,Audi A3,Sportback TFSI Black Edition,Audi,985,Automatic,No Rating,R 869 901
-Audi,Audi TT,Coupe 2.0TFSI,Audi,97 000,Automatic,Fair Price,R 359 899
-Audi,Audi S5,Cabriolet Quattro,Audi,67 000,Automatic,No Rating,R 559 800
-Audi,Audi Q3,2.0TDI Quattro Auto,Audi,200 000,Automatic,Fair Price,R 189 999
-Audi,Audi RSQ8,Quattro,Audi,33 123,Automatic,Great Price,R 2 099 995
-Audi,Audi A3,Sedan 35TFSI Black Edition,Audi,14 000,Automatic,Fair Price,R 669 900
-Audi,,,,,,Fair Price,
-Audi,,,,,,No Rating,
-Audi,,,,,,Fair Price,
-Audi,Audi A3,Sedan 35TFSI Black Edition,Audi,14 300,Automatic,Fair Price,R 679 900
-Audi,Audi Q3,Sportback 35TFSI Black Edition,Audi,9 500,Automatic,No Rating,R 769 900
-Audi,Audi TT,Coupe 2.0TFSI,Audi,76 294,Automatic,Fair Price,R 399 950
-Audi,Audi RS5,Coupe Quattro,Audi,60 000,Automatic,No Rating,R 1 249 900
-Audi,ined,,ined,,,,
-Audi,Audi A1,Sportback 30TFSI,Audi,64 000,Automatic,No Rating,R 369 900
-Audi,Audi Q3,Sportback 35TFSI S Line,Audi,58 035,Automatic,Fair Price,R 609 900
-Audi,Audi A1,Sportback 1.4TFSI SE Auto,Audi,120 000,Automatic,Fair Price,R 219 900
-Audi,Audi RS5,Sportback Quattro,Audi,23 000,Automatic,No Rating,R 1 349 900
-Audi,Audi A4,1.8T SE Sport Edition Plus Auto,Audi,167 789,Automatic,No Rating,R 179 990
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 654 710
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 637 129
-Audi,Audi Q2,Sportback 35TFSI Black Edition  110kW,Audi,1 000,Automatic,No Rating,R 789 900
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 654 710
-Audi,Audi Q5,Sportback 40TDI Quattro Advanced,Audi,69 200,Automatic,Fair Price,R 769 995
-Audi,Audi Q8,55TFSI Quattro,Audi,50 000,Automatic,Fair Price,R 929 900
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,Audi S3,Sportback Quattro,Audi,76 092,Automatic,Fair Price,R 549 850
-Audi,Audi Q5,Sportback 40TDI Quattro Black Edition,Audi,3 000,Automatic,No Rating,R 1 189 000
-Audi,Audi Q5,Sportback 40TDI Quattro Advanced,Audi,29 482,Automatic,No Rating,R 819 890
-Audi,Audi Q3,1.4TFSI Auto,Audi,133 000,Automatic,Fair Price,R 249 990
-Audi,Audi A5,Sportback 2.0TDI,Audi,126 600,Automatic,No Rating,R 299 950
-Audi,Audi Q5,Sportback 40TDI Quattro Black Edition,Audi,1 500,Automatic,No Rating,R 1 228 950
-Audi,Audi A3,Sedan 30TFSI,Audi,119 000,Automatic,Fair Price,R 279 995
-Audi,Audi A3,Sportback 35TFSI,Audi,81 300,Automatic,Great Price,R 329 890
-Audi,Audi A3,Sportback 35TFSI Advanced,Audi,22 900,Automatic,Great Price,R 539 950
-Audi,Audi Q3,35TFSI,Audi,50 000,Automatic,Great Price,R 422 042
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,Audi A3,Sedan 35TFSI Black Edition,Audi,16 000,Automatic,Fair Price,R 699 900
-Audi,Audi S5,Coupe Quattro,Audi,102 883,Automatic,No Rating,R 589 000
-Audi,Audi Q8,45TDI Quattro Black Edition,Audi,13 283,Automatic,No Rating,R 1 749 990
-Audi,Audi Q7,45TDI Quattro S Line,Audi,73 046,Automatic,Great Price,R 889 900
-Audi,ined,,ined,,,,
-Audi,Audi RS3,Sedan Quattro,Audi,1 659,Automatic,No Rating,R 1 495 000
-Audi,Audi S3,Sedan Quattro,Audi,84 727,Automatic,Fair Price,R 549 900
-Audi,Audi A3,Sedan 1.4TFSI SE Auto,Audi,132 899,Automatic,Fair Price,R 219 950
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,300,Automatic,No Rating,R 539 990
-Audi,Audi A1,Sportback 30TFSI Advanced,Audi,300,Automatic,No Rating,R 469 990
-Audi,Audi Q3,Sportback 35TFSI Black Edition,Audi,500,Automatic,No Rating,R 889 990
-Audi,Audi RS3,Sedan Quattro,Audi,Automa,Petrol,No Rating,R 1 636 400
-Audi,Audi Q3,1.4TFSI Auto,Audi,66 000,Automatic,Great Price,R 269 990
-Audi,Audi SQ5,TFSI Quattro Black Edition,Audi,5 000,Automatic,No Rating,R 1 299 900
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 649 540
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 647 920
-Audi,,,,,,Fair Price,
-Audi,,,,,,No Rating,
-Audi,,,,,,Fair Price,
-Audi,Audi Q3,2.0TFSI Quattro Auto,Audi,150 000,Automatic,No Rating,R 219 995
-Audi,Audi Q2,35TFSI,Audi,80 000,Automatic,Great Price,R 339 900
-Audi,Audi RS6,Quattro Performance,Audi,37 500,Automatic,No Rating,R 2 000 000
-Audi,Audi TT,Coupe 2.0TFSI,Audi,84 500,Automatic,Fair Price,R 369 995
-Audi,Audi RSQ3,Sportback Quattro,Audi,35 000,Automatic,Fair Price,R 1 150 000
-Audi,Audi Q7,45TDI Quattro S Line,Audi,129 493,Automatic,No Rating,R 799 900
-Audi,Audi Q5,Sportback 40TDI Quattro Advanced,Audi,6 614,Automatic,Fair Price,R 969 900
-Audi,Audi Q5,40TDI Quattro Black Edition,Audi,10 125,Automatic,Fair Price,R 979 000
-Audi,Audi A3,Sportback 40TFSI S Line,Audi,25 566,Automatic,No Rating,R 629 900
-Audi,ined,,ined,,,,
-Audi,Audi A3,Sedan TFSI Black Edition,Audi,9 025,Automatic,No Rating,R 659 900
-Audi,,,,,,No Rating,
-Audi,,,,,,Fair Price,
-Audi,,,,,,Fair Price,
-Audi,Audi Q5,Sportback 45TFSI Quattro Black Edition,Audi,9 812,Automatic,No Rating,R 999 900
-Audi,Audi RS6,Quattro Performance,Audi,4 152,Automatic,No Rating,R 2 299 900
-Audi,Audi A3,Sportback 1.4TFSI S Auto,Audi,203 000,Automatic,Fair Price,R 179 900
-Audi,Audi Q5,2.0TDI S Quattro,Audi,56 077,Automatic,Fair Price,R 549 900
-Audi,Audi TT,RS Roadster Quattro,Audi,22 206,Automatic,No Rating,R 879 900
-Audi,Audi A5,Sportback 40TDI Quattro S Line,Audi,18 500,Automatic,No Rating,R 799 500
-Audi,Audi RS6,Quattro Performance,Audi,10 100,Automatic,No Rating,R 2 599 995
-Audi,Audi A1,Sportback 1.0TFSI S,Audi,65 500,Manual,No Rating,R 219 995
-Audi,Audi Q3,Sportback 40TFSI Quattro S Line,Audi,13 824,Automatic,No Rating,R 679 900
-Audi,Audi A4,2.0TDi,Audi,119 980,Automatic,No Rating,R 239 900
-Audi,Audi A5,Sportback 40TFSI S Line,Audi,77 790,Automatic,No Rating,R 429 900
-Audi,Audi Q5,40TDI Quattro Sport,Audi,47 000,Automatic,Great Price,R 539 995
-Audi,Audi Q3,2.0TDI Quattro,Audi,119 545,Automatic,No Rating,R 290 000
-Audi,Audi Q3,35TFSI Urban Edition,Audi,71 000,Automatic,No Rating,R 359 900
-Audi,Audi Q7,45TDI Quattro S Line,Audi,100 321,Automatic,Fair Price,R 809 950
-Audi,,,,,,Fair Price,
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,ined,,ined,,,,
-Audi,Audi Q3,Sportback 35TDI Urban Edition,Audi,11 893,Automatic,No Rating,R 739 950
-Audi,Audi A3,Sedan 35TFSI,Audi,89 000,Automatic,Fair Price,R 409 950
-Audi,Audi A1,Sportback 30TFSI S Line,Audi,15 700,Automatic,Fair Price,R 469 950
-Audi,Audi SQ5,TFSI Quattro,Audi,21 500,Automatic,No Rating,R 1 149 900
-Audi,Audi Q7,55TFSI Quattro Black Edition,Audi,1 500,Automatic,No Rating,R 1 849 950
-Audi,Audi A3,Sedan 1.0TFSI Auto,Audi,116 000,Automatic,No Rating,R 249 999
-Audi,Audi Q5,Sportback 40TDI Quattro Black Edition,Audi,28 310,Automatic,No Rating,R 849 995
-Audi,Audi Q5,Sportback 40TDI Quattro S Line,Audi,1 500,Automatic,No Rating,R 999 990
-Audi,Audi Q5,Sportback 40TDI Quattro Advanced,Audi,16 500,Automatic,Fair Price,R 899 900
-Audi,Audi A1,Sportback 1.4TFSI SE Auto,Audi,110 000,Automatic,Fair Price,R 209 899
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,Audi SQ7,TFSI Quattro Black Edition,Audi,429,Automatic,No Rating,R 2 349 995
-Audi,Audi Q3,Sportback 35TFSI,Audi,4 872,Automatic,No Rating,R 759 995
-Audi,Audi TT,S Coupe Quattro,Audi,104 000,Automatic,Great Price,R 399 995
-Audi,Audi A1,Sportback 35TFSI S Line,Audi,18 766,Automatic,No Rating,R 499 900
-Audi,Audi A4,40TFSI S Line,Audi,25 843,Automatic,No Rating,R 659 900
-Audi,Audi RSQ3,Sportback Quattro,Audi,86 500,Automatic,No Rating,R 899 900
-Audi,Audi RS3,Sportback Quattro,Audi,85 000,Automatic,Fair Price,R 629 900
-Audi,Audi Q3,35TFSI,Audi,34 500,Automatic,High Price,R 599 900
-Audi,Audi Q3,35TFSI S Line,Audi,76 000,Automatic,Fair Price,R 499 900
-Audi,Audi e-tron,55 Quattro Advanced,Audi,44 903,Automatic,No Rating,R 959 950
-Audi,Audi RSQ8,Quattro,Audi,40 500,Automatic,Great Price,R 1 849 900
-Audi,Audi Q3,35TFSI Advanced line,Audi,74 339,Automatic,Great Price,R 379 950
-Audi,Audi Q5,Sportback 40TDI Quattro Black Edition,Audi,7 500,Automatic,No Rating,R 1 239 900
-Audi,Audi Q8,55TFSI Quattro,Audi,120 000,Automatic,Fair Price,R 799 900
-Audi,Audi S3,Sedan TFSI Quattro,Audi,1 800,Automatic,No Rating,R 1 149 995
-Audi,,,,,,Fair Price,
-Audi,,,,,,No Rating,
-Audi,,,,,,Fair Price,
-Audi,Audi A3,Sportback 30TFSI,Audi,90 200,Automatic,Fair Price,R 329 995
-Audi,Audi Q3,35TFSI Urban Edition,Audi,41 000,Automatic,No Rating,R 449 900
-Audi,Audi A5,Sportback 2.0TDI,Audi,103 000,Automatic,No Rating,R 299 899
-Audi,Audi SQ5,TFSI Quattro,Audi,65 000,Automatic,No Rating,R 959 000
-Audi,Audi A5,Coupe 40TFSI S Line,Audi,91 000,Automatic,No Rating,R 449 990
-Audi,ined,,ined,,,,
-Audi,Audi Q3,35TFSI Advanced,Audi,138 000,Automatic,No Rating,R 399 900
-Audi,Audi TT,S Coupe Quattro,Audi,58 221,Automatic,Low Price,R 409 900
-Audi,Audi Q5,Sportback 40TDI Quattro Black Edition,Audi,Automa,Diesel,No Rating,R 1 329 000
-Audi,Audi A3,Sedan 35TFSI,Audi,91 500,Automatic,Fair Price,R 399 900
-Audi,Audi A3,Sportback TFSI S Line,Audi,Automa,Petrol,No Rating,R 699 950
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,Audi A3,Sportback TFSI S Line,Audi,Automa,Petrol,No Rating,R 699 950
-Audi,Audi A3,Sportback 35TFSI S Line,Audi,16 000,Automatic,Great Price,R 640 000
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 647 920
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 642 820
-Audi,Audi Q7,45TDI Quattro,Audi,82 500,Automatic,Great Price,R 599 900
-Audi,Audi RS3,Sportback Quattro Carbon Edition,Audi,Automa,Petrol,No Rating,R 1 766 100
-Audi,Audi TT,S Coupe Quattro,Audi,98 000,Automatic,No Rating,R 488 888
-Audi,Audi TT,S Coupe Quattro,Audi,125 000,Automatic,Fair Price,R 419 950
-Audi,Audi A3,Sportback 30TFSI,Audi,118 953,Automatic,Fair Price,R 339 900
-Audi,Audi A3,Sportback 30TFSI,Audi,29 313,Automatic,Fair Price,R 399 900
-Audi,Audi A3,Sportback 35TFSI Advanced line,Audi,10 684,Automatic,Fair Price,R 499 900
-Audi,Audi A1,3-Door 1.4TFSI SE Auto,Audi,63 000,Automatic,No Rating,R 289 950
-Audi,Audi RSQ8,Quattro Performance,Audi,4 560,Automatic,No Rating,R 2 979 995
-Audi,Audi A5,Sedan TFSI Quattro Black Edition,Audi,1 655,Automatic,No Rating,R 1 395 000
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,1 800,Automatic,No Rating,R 579 995
-Brand,Model,Variant,Year,Milage,Manual_Automatic,Price_rating,Price
-Audi,,,,,,No Rating,
-Audi,,,,,,Fair Price,
-Audi,,,,,,No Rating,
-Audi,Audi Q5,2.0TDI S Quattro Auto,Audi,240 000,Automatic,Great Price,R 139 900
-Audi,Audi Q2,30TFSI,Audi,35 254,Automatic,Great Price,R 359 900
-Audi,Audi Q3,Sportback 40TFSI Quattro S Line,Audi,64 250,Automatic,Great Price,R 539 990
-Audi,Audi Q2,35TFSI,Audi,21 500,Automatic,Great Price,R 419 900
-Audi,Audi RSQ8,Quattro,Audi,57 000,Automatic,Great Price,R 1 749 900
-Audi,Audi A1,Sportback 35TFSI,Audi,99 000,Automatic,Great Price,R 299 950
-Audi,Audi Q2,35TFSI Advanced line,Audi,91 000,Automatic,Great Price,R 339 900
-Audi,Audi S3,Sportback Quattro,Audi,149 000,Automatic,Great Price,R 289 900
-Audi,Audi Q5,Sportback 40TDI Quattro S Line,Audi,39 000,Automatic,Great Price,R 729 999
-Audi,Audi Q7,3.0TDI Quattro,Audi,197 000,Automatic,Great Price,R 329 990
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,Audi A3,Sedan 1.0TFSI Auto,Audi,112 450,Automatic,No Rating,R 269 950
-Audi,ined,,ined,,,,
-Audi,Audi Q5,Sportback 40TDI Quattro S Line,Audi,26 125,Automatic,Great Price,R 799 900
-Audi,Audi A1,Sportback 30TFSI Advanced,Audi,91 500,Automatic,No Rating,R 299 900
-Audi,Audi A1,Sportback 35TFSI S Line,Audi,64 000,Automatic,No Rating,R 449 900
-Audi,Audi Q5,40TDI Quattro,Audi,85 773,Automatic,Fair Price,R 449 900
-Audi,Audi A4,40TFSI,Audi,87 000,Automatic,No Rating,R 499 990
-Audi,Audi Q3,2.0TDI Quattro Auto,Audi,228 700,Automatic,Great Price,R 149 900
-Audi,Audi A4,1.8T Ambition,Audi,199 000,Manual,Great Price,R 89 900
-Audi,Audi A1,Sportback 35TFSI S Line,Audi,36 000,Automatic,No Rating,R 439 950
-Audi,Audi Q3,2.0T Quattro Auto,Audi,146 000,Automatic,Great Price,R 159 950
-Audi,Audi Q3,2.0TDi,Audi,148 800,Manual,Fair Price,R 179 950
-Audi,Audi Q5,40TDI Quattro Sport S Line Sports,Audi,70 000,Automatic,Great Price,R 479 900
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,6 731,Automatic,Great Price,R 499 995
-Audi,Audi Q3,Sportback 35TFSI Urban Edition,Audi,66 854,Automatic,Great Price,R 489 000
-Audi,Audi R8,5.2 V10 Quattro Auto,Audi,85 000,Automatic,No Rating,R 1 399 900
-Brand,Model,Variant,Year,Milage,Manual_Automatic,Price_rating,Price
-Audi,,,,,,Fair Price,
-Audi,,,,,,No Rating,
-Audi,,,,,,Fair Price,
-Audi,Audi Q5,2.0TDI S Quattro Auto,Audi,240 000,Automatic,Great Price,R 139 900
-Audi,Audi Q2,30TFSI,Audi,35 254,Automatic,Great Price,R 359 900
-Audi,Audi Q3,Sportback 40TFSI Quattro S Line,Audi,64 250,Automatic,Great Price,R 539 990
-Audi,ined,,ined,,,,
-Audi,Audi Q2,35TFSI,Audi,21 500,Automatic,Great Price,R 419 900
-Audi,Audi RSQ8,Quattro,Audi,57 000,Automatic,Great Price,R 1 749 900
-Audi,Audi A1,Sportback 35TFSI,Audi,99 000,Automatic,Great Price,R 299 950
-Audi,Audi Q2,35TFSI Advanced line,Audi,91 000,Automatic,Great Price,R 339 900
-Audi,Audi S3,Sportback Quattro,Audi,149 000,Automatic,Great Price,R 289 900
-Audi,Audi Q5,Sportback 40TDI Quattro S Line,Audi,39 000,Automatic,Great Price,R 729 999
-Audi,Audi Q7,3.0TDI Quattro,Audi,197 000,Automatic,Great Price,R 329 990
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,,,,,,No Rating,
-Audi,Audi A3,Sedan 1.0TFSI Auto,Audi,112 450,Automatic,No Rating,R 269 950
-Audi,Audi Q5,Sportback 40TDI Quattro S Line,Audi,26 125,Automatic,Great Price,R 799 900
-Audi,Audi A1,Sportback 30TFSI Advanced,Audi,91 500,Automatic,No Rating,R 299 900
-Audi,Audi A1,Sportback 35TFSI S Line,Audi,64 000,Automatic,No Rating,R 449 900
-Audi,Audi Q5,40TDI Quattro,Audi,85 773,Automatic,Fair Price,R 449 900
-Audi,Audi A4,40TFSI,Audi,87 000,Automatic,No Rating,R 499 990
-Audi,Audi Q3,2.0TDI Quattro Auto,Audi,228 700,Automatic,Great Price,R 149 900
-Audi,Audi A4,1.8T Ambition,Audi,199 000,Manual,Great Price,R 89 900
-Audi,Audi A1,Sportback 35TFSI S Line,Audi,36 000,Automatic,No Rating,R 439 950
-Audi,Audi Q3,2.0T Quattro Auto,Audi,146 000,Automatic,Great Price,R 159 950
-Audi,Audi Q3,2.0TDi,Audi,148 800,Manual,Fair Price,R 179 950
-Audi,Audi Q5,40TDI Quattro Sport S Line Sports,Audi,70 000,Automatic,Great Price,R 479 900
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,6 731,Automatic,Great Price,R 499 995
-Audi,Audi Q3,Sportback 35TFSI Urban Edition,Audi,66 854,Automatic,Great Price,R 489 000
-Audi,Audi R8,5.2 V10 Quattro Auto,Audi,85 000,Automatic,No Rating,R 1 399 900
-Audi,,,,,,Great Price,
-Audi,,,,,,No Rating,
-Audi,,,,,,Great Price,
-Audi,Audi S4,TFSI Quattro,Audi,19 536,Automatic,No Rating,R 899 000
-Audi,Audi Q5,Sportback 40TDI Quattro S Line,Audi,66 452,Automatic,Fair Price,R 719 900
-Audi,Audi A3,Sedan 35TFSI,Audi,127 000,Automatic,Fair Price,R 412 888
-Audi,ined,,ined,,,,
-Audi,Audi S3,Sportback TFSI Quattro,Audi,10 300,Automatic,No Rating,R 1 119 000
-Audi,Audi A3,Sportback TFSI Black Edition,Audi,985,Automatic,No Rating,R 869 901
-Audi,Audi TT,Coupe 2.0TFSI,Audi,97 000,Automatic,Fair Price,R 359 899
-Audi,Audi S5,Cabriolet Quattro,Audi,67 000,Automatic,No Rating,R 559 800
-Audi,Audi Q3,2.0TDI Quattro Auto,Audi,200 000,Automatic,Fair Price,R 189 999
-Audi,Audi RSQ8,Quattro,Audi,33 123,Automatic,Great Price,R 2 099 995
-Audi,Audi A3,Sedan 35TFSI Black Edition,Audi,14 000,Automatic,Fair Price,R 669 900
-Audi,,,,,,Fair Price,
-Audi,,,,,,No Rating,
-Audi,,,,,,Fair Price,
-Audi,Audi A3,Sedan 35TFSI Black Edition,Audi,14 300,Automatic,Fair Price,R 679 900
-Audi,Audi Q3,Sportback 35TFSI Black Edition,Audi,9 500,Automatic,No Rating,R 769 900
-Audi,Audi TT,Coupe 2.0TFSI,Audi,76 294,Automatic,Fair Price,R 399 950
-Audi,Audi RS5,Coupe Quattro,Audi,60 000,Automatic,No Rating,R 1 249 900
-Audi,Audi A1,Sportback 30TFSI,Audi,64 000,Automatic,No Rating,R 369 900
-Audi,Audi Q3,Sportback 35TFSI S Line,Audi,58 035,Automatic,Fair Price,R 609 900
-Audi,Audi A1,Sportback 1.4TFSI SE Auto,Audi,120 000,Automatic,Fair Price,R 219 900
-Audi,Audi RS5,Sportback Quattro,Audi,23 000,Automatic,No Rating,R 1 349 900
-Audi,Audi A4,1.8T SE Sport Edition Plus Auto,Audi,167 789,Automatic,No Rating,R 179 990
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 654 710
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 637 129
-Audi,Audi Q2,Sportback 35TFSI Black Edition  110kW,Audi,1 000,Automatic,No Rating,R 789 900
-Audi,Audi A1,Sportback 30TFSI Black Edition,Audi,Automa,Petrol,No Rating,R 654 710
-Audi,Audi Q5,Sportback 40TDI Quattro Advanced,Audi,69 200,Automatic,Fair Price,R 769 995
-Audi,Audi Q8,55TFSI Quattro,Audi,50 000,Automatic,Fair Price,R 929 900
