@@ -9,18 +9,19 @@ if __name__ == '__main__':
         "Referer": "https://www.google.com/"
     }
 
-    Brand_names_autotrader = ('Audi','BMW','BYD','Bentley','Ferrari','Fiat','Ford','GWM','Haval','Honda','Hyundai','Isuzu','JAECOO','Jaguar','Jeep','Jetour','Kia','Lamborghini','Land Rover','Lexus','MINI','Mahindra','Maserati','Mazda','McLaren','Mercedes-AMG','Mercedes-Benz','Mercedes-Maybach','Mitsubishi','Nissan','OMODA','Porche','Rolls-Royce','Susuki','Toyota','Volkswagen','Volvo')
+    Brand_names_autotrader = ('Audi','BMW','BYD','Bentley','Ferrari','Fiat','Ford','GWM','Haval','Honda','Hyundai','Isuzu','JAECOO','Jaguar','Jeep','Jetour','Kia','Lamborghini','Land Rover','Lexus','MINI','Mahindra','Maserati','Mazda','McLaren','Mercedes-AMG','Mercedes-Benz','Mercedes-Maybach','Mitsubishi','Nissan','OMODA','porsche','Rolls-Royce','Suzuki','Toyota','Volkswagen','Volvo')
     Brand_names_cars_coza = ('Toyota','Audi','BMW','BYD','Bentley','Ferrari','Fiat','Ford','GWM','Haval','Honda','Hyundai','Isuzu','JAECOO','Jaguar','Jeep','Jetour','Kia','Lamborghini','Land Rover','Lexus','MINI','Mahindra','Maserati','Mazda','McLaren','Mercedes-AMG','Mercedes-Benz','Mitsubishi','Nissan','OMODA','Porche','Rolls-Royce','Susuki','Volkswagen','Volvo')
 
     def scrape_autotrader(brand):
         base_url = f"https://www.autotrader.co.za/cars-for-sale/{brand}"
         
         response = requests.get(base_url, headers=HEADERS)
+        if response.status_code != 200:
+            return print(f"Error fetching AutoTrader\n Brand {brand}\n status code: {response.status_code}")
         soup = BeautifulSoup(response.text, "html.parser")
 
         base_element = soup.find('div',class_='e-results-body__e2m4a-Isq-Q-')
-        if response.status_code != 200:
-            return print(f"Error fetching AutoTrader page {page}: {response.status_code}")
+        
 
         max_page_number = soup.find_all('span',class_='e-text__2BikEDs6gKY-')
         max_page_number = max_page_number[-1].get_text()
@@ -81,10 +82,7 @@ if __name__ == '__main__':
 
                     try:
                         model = listing.find_all('span',class_='e-make-model-title__x6ofmTGPOrM-')
-                        print('retrieved html')
                         model = model[0].get_text()
-                        print('converted to text')
-                        print(model)
                         model = model[5:]
                         year = model[0:4]
                     except:
@@ -171,7 +169,6 @@ if __name__ == '__main__':
     for brand in Brand_names_autotrader:
         scrape_autotrader(brand)
         time.sleep(random.randint(5,10)) 
-        break
     """
     print('started scraping from carz.co.za')
     for brand in Brand_names_cars_coza:

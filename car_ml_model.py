@@ -25,10 +25,11 @@ def plot_data(dataframe):
     plt.show()
 
 def clean_model_name(m):
-        words = m.split()
-        cleaned_words = [w for w in words if w.lower() != brand.lower()]
-        cleaned = ' '.join(cleaned_words).strip()
-        return cleaned if cleaned else m
+    global name
+    words = m.split()
+    cleaned_words = [w for w in words if w.lower() != name.lower()]
+    cleaned = ' '.join(cleaned_words).strip()
+    return cleaned if cleaned else m
 
 model_datasets = {}
 # Mapping from string rating to numeric value
@@ -46,14 +47,14 @@ for name in brand_names:
     
     if os.path.exists(filename):
         if os.path.getsize(filename) == 0: raise Warning(f'{filename} is empty')
-        model_datasets[name] = pd.read_csv(filename,sep=',')
+        model_datasets[name] = pd.read_csv(filename,sep=',',dtype={"Brand": 'object', "Model": 'object',"Variant": 'object',"Year":'object',"Milage": 'int', "Manual_Automatic": 'object',"Price_rating": 'category', "Price": 'int'})
         print(f"Loaded: {filename}")
     else:
         print(f"Warning: {filename} not found. Skipping {name}.")
 
-for name, ds in model_datasets.items():# fixed: .items()
-    # === Convert Price_rating to numeric ===
+for name, ds in model_datasets.items():
     ds = ds.copy()
+    ds.head(5)
     ds['Cleaned_Model'] = ds['Model'].apply(clean_model_name)
     for model_name in sorted(ds['Cleaned_Model'].unique()):
         model_ds = ds[ds['Cleaned_Model'] == model_name].copy()
