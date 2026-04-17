@@ -1,4 +1,4 @@
-import requests,csv,time,random
+import requests,csv,time,random,sys
 from bs4 import BeautifulSoup
 
 if __name__ == '__main__':
@@ -83,8 +83,8 @@ if __name__ == '__main__':
                     try:
                         model = listing.find_all('span',class_='e-make-model-title__x6ofmTGPOrM-')
                         model = model[0].get_text()
+                        year = model[:4]
                         model = model[5:]
-                        year = model[0:4]
                     except:
                         model = None
                         year = None
@@ -100,6 +100,7 @@ if __name__ == '__main__':
                         print('Failed to write dict to csv')
                 f.flush()
                 time.sleep(random.randint(2,5))
+    #carz,co,za is unused due to webscrape block
     """
     def scrape_cars_co_za(brand):
         data = []

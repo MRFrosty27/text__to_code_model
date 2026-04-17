@@ -9,7 +9,7 @@ colors = ['#d62728', '#ff7f0e', '#ffdb58', '#2ca02c', '#1f77b4']  # red, orange,
 def plot_data(dataframe):
     plt.figure(figsize=(10, 6))
     for rating in range(5):
-        mask = dataframe['Price_rating_num'] == rating #Fix!
+        mask = dataframe['Price_rating_num'] == rating
         plt.scatter(dataframe.loc[mask, 'Price'], 
                     dataframe.loc[mask, 'Price_rating_num'], 
                     c=colors[rating],
@@ -24,17 +24,17 @@ def plot_data(dataframe):
     plt.legend(title='Price Rating')
     plt.show()
 
-def clean_model_name(m):
+def clean_model_name(model):
     global name
-    words = m.split()
+    words = str(model).split()
     cleaned_words = [w for w in words if w.lower() != name.lower()]
     cleaned = ' '.join(cleaned_words).strip()
-    return cleaned if cleaned else m
+    return cleaned if cleaned else model
 
 model_datasets = {}
 # Mapping from string rating to numeric value
 rating_map = {
-    'No rating': 0,
+    'No Rating': 0,
     'High Price': 1,
     'Low Price': 2,
     'Fair Price': 3,
@@ -47,15 +47,23 @@ for name in brand_names:
     
     if os.path.exists(filename):
         if os.path.getsize(filename) == 0: raise Warning(f'{filename} is empty')
-        model_datasets[name] = pd.read_csv(filename,sep=',',dtype={"Brand": 'object', "Model": 'object',"Variant": 'object',"Year":'object',"Milage": 'int', "Manual_Automatic": 'object',"Price_rating": 'category', "Price": 'int'})
+        temp_ds = pd.read_csv(filename,sep=',',dtype={"Brand": 'str', "Model": 'str',"Variant": 'str',"Year":'str',"Milage": 'str', "Manual_Automatic": 'category',"Price_rating": 'category', "Price": 'str'},header=0)
+        print(temp_ds[['Milage','Price']].head(5))
+        temp_ds['Milage'] = temp_ds['Milage'].str.replace(r'[^0-9]', '', regex=True)
+        temp_ds['Price'] = temp_ds['Price'].str.replace(r'[^0-9]', '', regex=True)
+        temp_ds['Milage'] = pd.to_numeric(temp_ds['Milage'])
+        temp_ds['Price'] = pd.to_numeric(temp_ds['Price'])
+        print(temp_ds[['Milage','Price']].head(5))
+        model_datasets[name] = temp_ds
         print(f"Loaded: {filename}")
     else:
         print(f"Warning: {filename} not found. Skipping {name}.")
 
 for name, ds in model_datasets.items():
     ds = ds.copy()
-    ds.head(5)
+    print(ds.head(5))
     ds['Cleaned_Model'] = ds['Model'].apply(clean_model_name)
+    print(ds['Cleaned_Model'].head(10))
     for model_name in sorted(ds['Cleaned_Model'].unique()):
         model_ds = ds[ds['Cleaned_Model'] == model_name].copy()
         model_ds['Price_rating_num'] = model_ds['Price_rating'].map(rating_map)
@@ -70,6 +78,8 @@ for name, ds in model_datasets.items():
         y_test = test_ds['Price_rating_num']
         print(f"Training model for {name} - {model_name}...")
         model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+        print(x_train.head(10))
+        print(y_train.head(10))
         model.fit(x_train, y_train)
         model_filename = f'{model_name}_ml_model.joblib'
         joblib.dump(model, model_filename)
